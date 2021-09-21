@@ -37,7 +37,7 @@ func StoreUser(user models.User) (*models.User, error) {
 
 func Update(id int, user models.User) (*models.User, error) {
 
-	if err := config.DB.Find(&user, id).Updates(&user).Error; err != nil {
+	if err := config.DB.Model(&user).Updates(&user).Error; err != nil {
 		return &models.User{}, err
 	}
 
@@ -45,8 +45,9 @@ func Update(id int, user models.User) (*models.User, error) {
 }
 
 func Delete(id int, user models.User) (*models.User, error) {
+	user.ID = id
 
-	if err := config.DB.Delete(&user, id).Error; err != nil {
+	if err := config.DB.Unscoped().Delete(&user).Error; err != nil {
 		return &models.User{}, err
 	}
 
