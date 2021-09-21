@@ -13,7 +13,7 @@ func MigrateDB() {
 }
 
 func InitDB() {
-	connectionString := "root:BavarianRestu2002@tcp(127.0.0.1:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
+	connectionString := "root:************@tcp(127.0.0.1:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
 
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
