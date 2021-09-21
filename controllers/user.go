@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"crudgoeg/lib/database"
+	"crudgoeg/models"
 	"net/http"
 	"strconv"
 
@@ -20,9 +21,8 @@ func GetUserController(e echo.Context) error {
 		})
 	}
 
-	return e.JSON(http.StatusOK, users)
+	return e.JSON(http.StatusOK, newResponseArray(*users))
 }
-
 
 func PostUserController(e echo.Context) error {
 	var userReq RequestUser
@@ -35,7 +35,7 @@ func PostUserController(e echo.Context) error {
 			"messages": err,
 		})
 	}
-	return e.JSON(http.StatusOK, result) 
+	return e.JSON(http.StatusOK, newResponse(*result))
 }
 
 func GetbyIdUserController(e echo.Context) error {
@@ -49,16 +49,16 @@ func GetbyIdUserController(e echo.Context) error {
 		})
 	}
 
-	return e.JSON(http.StatusOK, users)
+	return e.JSON(http.StatusOK, newResponse(*users))
 }
 
 func UpdateUserController(e echo.Context) error {
 	var userReq RequestUser
 	e.Bind(&userReq)
-	
+
 	id, _ := strconv.Atoi(e.Param("id"))
 
-	users, err := database.Update(id)
+	result, err := database.Update(id, userReq.toModel())
 
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -66,18 +66,25 @@ func UpdateUserController(e echo.Context) error {
 			"messages": err,
 		})
 	}
-	return e.JSON(http.StatusOK, users) 
+	return e.JSON(http.StatusOK, newResponse(*result))
 }
 
 func DeleteUserController(e echo.Context) error {
-	id, _ := strconv.Atoi(e.Param("id"))
+	var user models.User
 
-	_ , err := database.Delete(id)
+	id, _ := strconv.Atoi(e.Param("id"))
+	_, errF := database.GetbyIDUser(id)
+	_, err := database.Delete(id, user)
+
+	if errF != nil {
+		return e.JSON(http.StatusNotFound, map[string]interface{}{
+			"message": "not found",
+		})
+	}
 
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"status":   "err",
-			"messages": err,
+			"messages": err.Error(),
 		})
 	}
 

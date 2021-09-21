@@ -33,6 +33,7 @@ type ResponseUser struct {
 	Client_id int       `json:"client_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
 }
 
 func newResponse(mdlUsers models.User) ResponseUser {
@@ -44,6 +45,7 @@ func newResponse(mdlUsers models.User) ResponseUser {
 		Client_id: mdlUsers.Client_id,
 		CreatedAt: mdlUsers.CreatedAt,
 		UpdatedAt: mdlUsers.UpdatedAt,
+		DeletedAt: mdlUsers.DeletedAt.Time,
 	}
 }
 

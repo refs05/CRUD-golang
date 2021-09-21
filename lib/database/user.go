@@ -35,20 +35,18 @@ func StoreUser(user models.User) (*models.User, error) {
 	return &user, nil
 }
 
-func Update(id int) (*models.User, error) {
-	var user models.User
+func Update(id int, user models.User) (*models.User, error) {
 
-	if err := config.DB.Model(&user).Where("id = ?", id).Updates(&user).Error; err != nil {
+	if err := config.DB.Find(&user, id).Updates(&user).Error; err != nil {
 		return &models.User{}, err
 	}
 
 	return &user, nil
 }
 
-func Delete(id int) (*models.User, error) {
-	var user models.User
+func Delete(id int, user models.User) (*models.User, error) {
 
-	if err := config.DB.Where("id = ?", id).Delete(&user).Error; err != nil {
+	if err := config.DB.Delete(&user, id).Error; err != nil {
 		return &models.User{}, err
 	}
 
